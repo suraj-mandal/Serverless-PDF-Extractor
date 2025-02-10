@@ -1,16 +1,17 @@
 import os
 import sys
 
-from services.image_service import ImageService
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+print(SCRIPT_DIR)
+print("Here")
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import pytest
 from PIL import Image
 
 from exceptions.invalid_url_exceptions import InvalidUrlException
-from services.pdf_service import PdfService
+from services import PdfService
+from services import ImageService
 
 from test_constants import PDF_URL, INVALID_URL, IMAGE_PATH, BASE64_VALUE
 
