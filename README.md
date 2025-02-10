@@ -9,4 +9,4 @@ This application is a lambda function that does the following steps
 
 ## Architecture Diagram
 
-![architecture-diagram](./assets/architecture_diagram.png)
+![architecture-diagram](lambda/assets/architecture_diagram.png)
