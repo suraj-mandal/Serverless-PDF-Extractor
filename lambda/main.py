@@ -6,6 +6,7 @@ from services import PdfService
 
 async def process(pdf_url: str):
     try:
+        print('Processing')
         pdf_service = PdfService(pdf_url)
         await pdf_service.extract_content()
         pages = pdf_service.extract_pages_from_pdf()

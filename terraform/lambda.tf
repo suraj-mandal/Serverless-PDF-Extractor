@@ -14,13 +14,13 @@ resource "null_resource" "install_dependencies" {
 }
 
 resource "aws_lambda_function" "my_lambda" {
-  function_name    = var.lambda_name
+  function_name    = var.lambda_function_name
   role             = aws_iam_role.lambda_role.arn
   handler          = "lambda_function.lambda_handler"
-  runtime          = "python3.9"
+  runtime          = "python3.10"
   filename         = "lambda_function.zip"
-  source_code_hash = filebase64sha256("lambda_function.zip")
+  source_code_hash = filebase64sha256("../lambda_function.zip")
   timeout          = 10
 
-  depends_on = [null_resource.install_dependencies]
+  depends_on = [null_resource.install_dependencies]  # 👈 Ensure ZIP is created first
 }
