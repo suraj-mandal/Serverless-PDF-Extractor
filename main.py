@@ -1,15 +1,22 @@
 import asyncio
 
+from services.image_service import ImageService
 from services.pdf_service import PdfService
 
 
-async def async_main():
-    pdf_service = PdfService('https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf')
-    await pdf_service.extract_content()
-    res = pdf_service.extract_pages_from_pdf()
-    print(len(res))
-    # print(res)
+async def process(pdf_url: str):
+    try:
+        pdf_service = PdfService(pdf_url)
+        await pdf_service.extract_content()
+        pages = pdf_service.extract_pages_from_pdf()
 
+        return [
+            ImageService.convert_to_base64(page) for page in pages
+        ]
 
-if __name__ == '__main__':
-    asyncio.run(async_main())
+    except Exception as e:
+        print(e)
+
+# entry point of the lambda
+def lambda_handler(event, context):
+    asyncio.run(process(event.get("pdf_url")))
