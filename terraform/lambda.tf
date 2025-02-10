@@ -19,7 +19,6 @@ resource "aws_lambda_function" "my_lambda" {
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.10"
   filename         = "lambda_function.zip"
-  source_code_hash = filebase64sha256("../lambda_function.zip")
   timeout          = 10
 
   depends_on = [null_resource.install_dependencies]  # 👈 Ensure ZIP is created first
