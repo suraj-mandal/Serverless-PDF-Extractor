@@ -1,16 +1,18 @@
 import os
 import sys
 
+from services.image_service import ImageService
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import pytest
+from PIL import Image
 
 from exceptions.invalid_url_exceptions import InvalidUrlException
 from services.pdf_service import PdfService
 
-PDF_URL = 'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf'
-INVALID_URL = 'https://jsonplaceholder.typicode.com/'
+from test_constants import PDF_URL, INVALID_URL, IMAGE_PATH, BASE64_VALUE
 
 
 @pytest.fixture
@@ -42,3 +44,10 @@ async def test_extract_pages_from_pdf_success(pdf_service):
         assert len(pdf_pages) == 2
     except InvalidUrlException:
         pytest.fail('Invalid URL exception raised')
+
+
+def test_convert_to_base64_success():
+    test_image = Image.open(IMAGE_PATH)
+    base64_version = ImageService.convert_to_base64(test_image)
+    assert base64_version == BASE64_VALUE
+
