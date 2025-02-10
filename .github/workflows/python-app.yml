@@ -14,9 +14,7 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Install poppler
@@ -41,3 +39,9 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Generate zip file for packaging
+      run: |
+        rm -rf package && mkdir package
+        pip install -r requirements.txt -t package
+        cp -r lambda/* package/
+        cd package && zip -r ../lambda_function.zip .

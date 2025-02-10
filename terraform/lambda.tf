@@ -2,7 +2,7 @@ resource "null_resource" "install_dependencies" {
   provisioner "local-exec" {
     command = <<EOT
       rm -rf package && mkdir package
-      pip install -r lambda/requirements.txt -t package
+      pip install -r requirements.txt -t package
       cp -r lambda/* package/
       cd package && zip -r ../lambda_function.zip .
     EOT
