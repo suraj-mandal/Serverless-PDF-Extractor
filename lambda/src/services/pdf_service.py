@@ -8,8 +8,6 @@ from io import BytesIO
 
 from typing import List
 
-from exceptions.invalid_url_exceptions import InvalidUrlException
-
 
 class PdfService:
 
@@ -22,7 +20,7 @@ class PdfService:
         response = requests.get(self._pdf_url, timeout=30)
         response.raise_for_status()
         if response.headers.get('content-type') != 'application/pdf':
-            raise InvalidUrlException('URL provided does not contain a PDF')
+            raise ValueError('URL provided does not contain a PDF')
         self._content = response.content
 
     def extract_pages_from_pdf(self) -> List[Image.Image]:

@@ -1,7 +1,8 @@
 import asyncio
+import json
 
-from services import ImageService
-from services import PdfService
+from src.services import ImageService
+from src.services import PdfService
 
 
 async def process(pdf_url: str):
@@ -11,14 +12,29 @@ async def process(pdf_url: str):
         await pdf_service.extract_content()
         pages = pdf_service.extract_pages_from_pdf()
 
-        return [
+        print('Pages generated:', pages)
+
+        results = [
             ImageService.convert_to_base64(page) for page in pages
         ]
 
+        print(results)
+
+        return {
+            "statusCode": 200,
+            "body": results
+        }
+
     except Exception as e:
-        print(e)
+        return {
+            "statusCode": 200,
+            "body": [],
+            "errors": str(e)
+        }
 
 # entry point of the lambda
 def lambda_handler(event, context):
-    asyncio.run(process(event.get("pdf_url")))
+    loop = asyncio.get_event_loop()
+    response = loop.run_until_complete(process(event['pdf_url']))
+    return json.loads(json.dumps(response, default=str))
 

@@ -7,7 +7,6 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 import pytest
 from PIL import Image
 
-from exceptions.invalid_url_exceptions import InvalidUrlException
 from services import PdfService
 from services import ImageService
 
@@ -23,7 +22,7 @@ def pdf_service():
 async def test_extract_pdf_from_url_success_with_valid_url(pdf_service):
     try:
         await pdf_service.extract_content()
-    except InvalidUrlException:
+    except ValueError:
         pytest.fail('Invalid URL exception raised')
 
 
@@ -31,8 +30,8 @@ async def test_extract_pdf_from_url_success_with_valid_url(pdf_service):
 async def test_extract_pdf_from_url_failure_with_invalid_url():
     try:
         await PdfService(INVALID_URL).extract_content()
-    except InvalidUrlException:
-        pytest.raises(InvalidUrlException)
+    except ValueError:
+        pytest.raises(ValueError)
 
 
 @pytest.mark.asyncio
@@ -41,7 +40,7 @@ async def test_extract_pages_from_pdf_success(pdf_service):
         await pdf_service.extract_content()
         pdf_pages = pdf_service.extract_pages_from_pdf()
         assert len(pdf_pages) == 2
-    except InvalidUrlException:
+    except ValueError:
         pytest.fail('Invalid URL exception raised')
 
 
@@ -62,5 +61,5 @@ async def test_custom(pdf_service):
             'data': pdf_images,
         }
         print(output)
-    except InvalidUrlException:
+    except ValueError:
         pytest.fail('Invalid URL exception raised')
