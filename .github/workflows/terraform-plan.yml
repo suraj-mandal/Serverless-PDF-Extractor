@@ -1,8 +1,10 @@
 name: "Terraform Plan"
 
 on:
-  pull_request:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: ["Build Application"]
+    types:
+      - completed
 
 env:
   TF_CLOUD_ORGANIZATION: "Serverless-Pdf-Extractor-org"
@@ -11,8 +13,7 @@ env:
   CONFIG_DIRECTORY: "./terraform"
 
 jobs:
-  terraform:
-    needs: [build]
+  plan:
     if: github.repository != 'hashicorp-education/learn-terraform-github-actions'
     name: "Terraform Plan"
     runs-on: ubuntu-latest
