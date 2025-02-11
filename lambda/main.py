@@ -21,3 +21,4 @@ async def process(pdf_url: str):
 # entry point of the lambda
 def lambda_handler(event, context):
     asyncio.run(process(event.get("pdf_url")))
+
