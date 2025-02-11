@@ -20,6 +20,6 @@ resource "aws_lambda_function" "pdf_extractor_lambda" {
   runtime       = "python3.10"
   filename      = "../lambda_function.zip"
   layers        = [aws_lambda_layer_version.poppler_layer.arn]
-  timeout       = 10
+  timeout       = 300
   depends_on    = [null_resource.install_dependencies]  # 👈 Ensure ZIP is created first
 }
