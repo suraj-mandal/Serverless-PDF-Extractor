@@ -2,8 +2,6 @@ import os
 import sys
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-print(SCRIPT_DIR)
-print("Here")
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import pytest
@@ -52,3 +50,17 @@ def test_convert_to_base64_success():
     base64_version = ImageService.convert_to_base64(test_image)
     assert base64_version == BASE64_VALUE
 
+
+@pytest.mark.skip
+async def test_custom(pdf_service):
+    try:
+        await pdf_service.extract_content()
+        pdf_pages = pdf_service.extract_pages_from_pdf()
+
+        pdf_images = [ImageService.convert_to_base64(page) for page in pdf_pages]
+        output = {
+            'data': pdf_images,
+        }
+        print(output)
+    except InvalidUrlException:
+        pytest.fail('Invalid URL exception raised')
