@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 
-rm -rf package && mkdir package
-pip install -r requirements.txt -t package
-cp -r lambda/* package/
+rm -rf ./terraform/package && mkdir ./terraform/package
+pip install -r requirements.txt -t ./terraform/package
+cp -r lambda/* ./terraform/package/
