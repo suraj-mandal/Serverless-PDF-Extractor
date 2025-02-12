@@ -65,6 +65,9 @@ jobs:
         run: |
           chmod +x scripts/package.sh
           ./scripts/package.sh
+        working-directory: ${{ github.workspace }}
+      - name: Verify Package Directory
+        run: ls -l ${{ github.workspace }}/package
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
         id: plan-upload
