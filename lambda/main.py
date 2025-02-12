@@ -12,8 +12,6 @@ async def process(pdf_url: str):
         await pdf_service.extract_content()
         pages = pdf_service.extract_pages_from_pdf()
 
-        print('Pages generated:', pages)
-
         results = [
             ImageService.convert_to_base64(page) for page in pages
         ]
@@ -21,6 +19,7 @@ async def process(pdf_url: str):
         return results
 
     except Exception as e:
+        print(e)
         return []
 
 
@@ -42,7 +41,9 @@ def lambda_handler(event, context):
     loop = asyncio.get_event_loop()
     image_results = loop.run_until_complete(process(url))
 
+
     if len(image_results) > 0:
+        print(f"Total pages processed: {len(image_results)}")
         response = {
             "status": 200,
             "body": json.dumps(image_results)

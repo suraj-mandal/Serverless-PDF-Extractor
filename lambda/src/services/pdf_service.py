@@ -19,8 +19,10 @@ class PdfService:
     async def extract_content(self):
         response = requests.get(self._pdf_url, timeout=30)
         response.raise_for_status()
-        if response.headers.get('content-type') != 'application/pdf':
+        if 'content-type' in response.headers and response.headers.get('content-type') != 'application/pdf':
             raise ValueError('URL provided does not contain a PDF')
+        if 'content-type' not in response.headers:
+            print("Content type not found in header. Executing with the assumption that it is a PDF downloadable link")
         self._content = response.content
 
     def extract_pages_from_pdf(self) -> List[Image.Image]:

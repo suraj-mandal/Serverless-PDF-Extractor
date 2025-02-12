@@ -24,5 +24,6 @@ resource "aws_lambda_function" "pdf_extractor_lambda" {
   filename      = "lambda_function.zip"
   layers        = [aws_lambda_layer_version.poppler_layer.arn]
   timeout       = 300
+  source_code_hash = data.archive_file.lambda.output_base64sha256
   # depends_on    = [null_resource.install_dependencies]  # 👈 Ensure ZIP is created first
 }
