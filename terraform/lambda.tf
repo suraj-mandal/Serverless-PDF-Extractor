@@ -1,10 +1,7 @@
 resource "null_resource" "install_dependencies" {
   provisioner "local-exec" {
     command = <<EOT
-      rm -rf ../package && mkdir ../package
-      pip install -r ../requirements.txt -t ../package
-      cp -r ../lambda/* ../package/
-      cd ../package && zip -r ../lambda_function.zip .
+      sh ../scripts/create_package.sh
     EOT
   }
 
@@ -13,12 +10,18 @@ resource "null_resource" "install_dependencies" {
   }
 }
 
+data archive_file "lambda" {
+  type        = "zip"
+  source_dir  = "${path.module}/../package"
+  output_path = "${path.module}/lambda_function.zip"
+}
+
 resource "aws_lambda_function" "pdf_extractor_lambda" {
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_role.arn
   handler       = "main.lambda_handler"
   runtime       = "python3.10"
-  filename      = "../lambda_function.zip"
+  filename      = "lambda_function.zip"
   layers        = [aws_lambda_layer_version.poppler_layer.arn]
   timeout       = 300
   depends_on    = [null_resource.install_dependencies]  # 👈 Ensure ZIP is created first
