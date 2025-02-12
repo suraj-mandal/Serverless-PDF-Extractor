@@ -56,3 +56,7 @@ def lambda_handler(event, context):
 
     return response
 
+if __name__ == '__main__':
+    lambda_handler({
+        "pdf_url": "https://drive.google.com/uc?export=download&id=13UYjjTPS9dhFDKSQ4ri9rbV4jzNiJBCV",
+    }, None)
