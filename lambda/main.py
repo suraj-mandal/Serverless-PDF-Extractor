@@ -34,7 +34,14 @@ async def process(pdf_url: str):
 
 # entry point of the lambda
 def lambda_handler(event, context):
+
+    # event will not come via an api gateway call
+    payload = json.loads(event.get("body", {}))
+    # get the url from the payload
+    url = payload.get("pdf_url", None)
+
+    # existing functionality
     loop = asyncio.get_event_loop()
-    response = loop.run_until_complete(process(event['pdf_url']))
+    response = loop.run_until_complete(process(url))
     return json.loads(json.dumps(response, default=str))
 
