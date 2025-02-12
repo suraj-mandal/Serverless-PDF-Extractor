@@ -14,7 +14,7 @@ env:
   TF_CLOUD_ORGANIZATION: "Serverless-Pdf-Extractor-org"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "Serverless-PDF-Workspace"
-  CONFIG_DIRECTORY: "${{ github.workspace }}/terraform"
+  CONFIG_DIRECTORY: "terraform"
 
 
 jobs:
