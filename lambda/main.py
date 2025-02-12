@@ -18,23 +18,40 @@ async def process(pdf_url: str):
             ImageService.convert_to_base64(page) for page in pages
         ]
 
-        print(results)
-
-        return {
-            "statusCode": 200,
-            "body": results
-        }
+        return results
 
     except Exception as e:
-        return {
-            "statusCode": 200,
-            "body": [],
-            "errors": str(e)
-        }
+        return []
+
 
 # entry point of the lambda
 def lambda_handler(event, context):
+    # proper changes have been made so that the code
+    # can be executed by an event as well as via API Gateway.
+    # event will not come via an api gateway call
+    payload = event.get("body", None)
+
+    if payload is None:
+        url = event.get("pdf_url")
+    else:
+        json_payload = json.loads(payload)
+        # get the url from the payload
+        url = json_payload.get("pdf_url", None)
+
+    # existing functionality
     loop = asyncio.get_event_loop()
-    response = loop.run_until_complete(process(event['pdf_url']))
-    return json.loads(json.dumps(response, default=str))
+    image_results = loop.run_until_complete(process(url))
+
+    if len(image_results) > 0:
+        response = {
+            "status": 200,
+            "body": json.dumps(image_results)
+        }
+    else:
+        response = {
+            "status": 500,
+            "error": "Issues happened, please check logs"
+        }
+
+    return response
 
