@@ -12,7 +12,7 @@
 
 data archive_file "lambda" {
   type        = "zip"
-  source_dir  = "${path.module}/../package"
+  source_dir  = "${path.module}/package"
   output_path = "${path.module}/lambda_function.zip"
 }
 
