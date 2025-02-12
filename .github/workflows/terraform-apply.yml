@@ -13,30 +13,7 @@ env:
 
 
 jobs:
-  zip:
-    name: "Generate zip"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install poppler
-        run: |
-          sudo apt update
-          sudo apt install poppler-utils -y
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.10"
-      - name: Generate zip file for packaging
-        run: |
-          rm -rf package && mkdir package
-          pip install -r requirements.txt -t package
-          cp -r lambda/* package/
-          cd package && zip -r ../lambda_function.zip .
   apply:
-    needs: [ zip ]
     if: github.repository != 'hashicorp-education/learn-terraform-github-actions'
     name: "Terraform Apply"
     runs-on: ubuntu-latest
@@ -46,7 +23,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Generate zip file for packaging
+        run: |
+          chmod +x scripts/package.sh
+          ./scripts/package.sh
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
         id: apply-upload
@@ -60,7 +44,6 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
-
       - name: Apply
         uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.0.0
         if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable

@@ -1,14 +1,14 @@
-resource "null_resource" "install_dependencies" {
-  provisioner "local-exec" {
-    command = <<EOT
-      sh ../scripts/create_package.sh
-    EOT
-  }
-
-  triggers = {
-    always_run = timestamp()
-  }
-}
+# resource "null_resource" "install_dependencies" {
+#   provisioner "local-exec" {
+#     command = <<EOT
+#       sh ../scripts/package.sh
+#     EOT
+#   }
+#
+#   triggers = {
+#     always_run = timestamp()
+#   }
+# }
 
 data archive_file "lambda" {
   type        = "zip"
@@ -24,5 +24,5 @@ resource "aws_lambda_function" "pdf_extractor_lambda" {
   filename      = "lambda_function.zip"
   layers        = [aws_lambda_layer_version.poppler_layer.arn]
   timeout       = 300
-  depends_on    = [null_resource.install_dependencies]  # 👈 Ensure ZIP is created first
+  # depends_on    = [null_resource.install_dependencies]  # 👈 Ensure ZIP is created first
 }
